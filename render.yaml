@@ -1,0 +1,28 @@
+services:
+  # Servicio Backend
+  - type: web
+    name: ap-erp-analyzer-backend
+    env: docker
+    dockerfilePath: ./AP-ERP-Analyzer-BE/Dockerfile
+    dockerContext: ./AP-ERP-Analyzer-BE
+    plan: free
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # Servicio Frontend
+  - type: web
+    name: ap-erp-analyzer-frontend
+    env: docker
+    dockerfilePath: ./AP-ERP-Analyzer-FE/Dockerfile
+    dockerContext: ./AP-ERP-Analyzer-FE
+    plan: free
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          name: ap-erp-analyzer-backend
+          type: web
+          property: url
+    autoDeploy: true
